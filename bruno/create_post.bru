@@ -1,0 +1,18 @@
+meta {
+  name: create_post
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/create/post
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "id": "761bec73-b20e-414d-be7d-1fb955355b1f",
+    "title": "Here is a title"
+  }
+}
