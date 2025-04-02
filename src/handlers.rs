@@ -8,7 +8,7 @@ use crate::models::Post;
 pub async fn create_post(post: Post) -> Result<impl warp::Reply, Infallible> {
     println!("Post Created: {:?}", post);
 
-    return Ok(StatusCode::CREATED);
+    Ok(StatusCode::CREATED)
 }
 
 pub async fn read_post(id: Uuid) -> Result<impl warp::Reply, Infallible> {
@@ -18,5 +18,5 @@ pub async fn read_post(id: Uuid) -> Result<impl warp::Reply, Infallible> {
         body: String::from("this is a post about warp"),
     };
 
-    return Ok(warp::reply::json(&post));
+    Ok(warp::reply::json(&post))
 }

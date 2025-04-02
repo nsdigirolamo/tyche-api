@@ -4,7 +4,7 @@ use warp::Filter;
 use crate::handlers;
 
 pub fn routes() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    return create_post().or(read_post());
+    create_post().or(read_post())
 }
 
 fn create_post() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
