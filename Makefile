@@ -10,6 +10,7 @@ db-stop:
 
 db-run:
 	sudo docker container run \
+		--publish 5432:5432 \
 		--name $(POSTGRES_CONTAINER_NAME) \
 		--env POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
 		--detach \
