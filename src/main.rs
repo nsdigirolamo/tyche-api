@@ -16,13 +16,16 @@ async fn main() -> Result<(), sqlx::Error> {
     let author_id = Uuid::new_v4();
     let message = "Hello world.";
 
-    sqlx::query!(
-        "INSERT INTO posts (author_id, message) VALUES ($1, $2)",
+    let inserted = sqlx::query_as!(
+        Post,
+        "INSERT INTO posts (author_id, message) VALUES ($1, $2) RETURNING id, author_id, message, created_at",
         author_id,
         message
     )
-    .execute(&pool)
+    .fetch_one(&pool)
     .await?;
+
+    println!("{:?}", inserted);
 
     let row = sqlx::query_as!(
         Post,
