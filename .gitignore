@@ -1,1 +1,5 @@
+# Sensitive Information
+.env
+
+# Generated Files
 /target
