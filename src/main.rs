@@ -1,4 +1,6 @@
+use models::Post;
 use sqlx::postgres::PgPoolOptions;
+use uuid::Uuid;
 
 pub mod handlers;
 pub mod models;
@@ -11,12 +13,26 @@ async fn main() -> Result<(), sqlx::Error> {
         .connect("postgres://postgres:password@localhost:5432/postgres")
         .await?;
 
-    let row: (i64,) = sqlx::query_as("SELECT $1")
-        .bind(150_i64)
-        .fetch_one(&pool)
-        .await?;
+    let author_id = Uuid::new_v4();
+    let message = "Hello world.";
 
-    println!("Should be 150: {}", row.0);
+    sqlx::query!(
+        "INSERT INTO posts (author_id, message) VALUES ($1, $2)",
+        author_id,
+        message
+    )
+    .execute(&pool)
+    .await?;
+
+    let row = sqlx::query_as!(
+        Post,
+        "SELECT id, author_id, message, created_at FROM posts WHERE author_id = $1",
+        author_id,
+    )
+    .fetch_all(&pool)
+    .await?;
+
+    println!("{:?}", row);
 
     Ok(())
 
