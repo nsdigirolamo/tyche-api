@@ -1,8 +1,7 @@
-use chrono::{self, DateTime, Utc};
-use serde::{Deserialize, Serialize};
+use chrono::{DateTime, Utc};
 use uuid::Uuid;
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Debug)]
 pub struct Post {
     pub id: Uuid,
     pub author_id: Uuid,
