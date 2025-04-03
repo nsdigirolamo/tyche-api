@@ -25,3 +25,6 @@ db-migrate-up:
 
 db-migrate-down:
 	cargo sqlx migrate revert
+
+db-enter:
+ 	sudo docker exec -it tyche-postgres psql -U postgres
