@@ -1,24 +1,20 @@
-use std::convert::Infallible;
-
-use chrono::Utc;
 use uuid::Uuid;
-use warp::http::StatusCode;
+use warp::reject::Rejection;
 
-use crate::models::Post;
+use crate::{
+    models::dtos::{CreatePostInput, CreatePostOutput, ReadPostOutput},
+    repository::Repository,
+};
 
-pub async fn create_post(post: Post) -> Result<impl warp::Reply, Infallible> {
-    println!("Post Created: {:?}", post);
-
-    Ok(StatusCode::CREATED)
+pub async fn create_post(
+    db: Repository,
+    input: CreatePostInput,
+) -> Result<impl warp::Reply, Rejection> {
+    let post = db.create_post(input).await?;
+    Ok(warp::reply::json(&CreatePostOutput::from(post)))
 }
 
-pub async fn read_post(id: Uuid) -> Result<impl warp::Reply, Infallible> {
-    let post = Post {
-        id,
-        author_id: Uuid::new_v4(),
-        message: String::from("hello world"),
-        created_at: Utc::now(),
-    };
-
-    Ok(warp::reply::json(&post))
+pub async fn read_post(db: Repository, id: Uuid) -> Result<impl warp::Reply, Rejection> {
+    let post = db.get_post(id).await?;
+    Ok(warp::reply::json(&ReadPostOutput::from(post)))
 }
