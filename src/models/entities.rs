@@ -1,10 +1,7 @@
-use chrono::{DateTime, Utc};
-use uuid::Uuid;
-
 #[derive(Debug)]
 pub struct Post {
-    pub id: Uuid,
-    pub author_id: Uuid,
+    pub id: uuid::Uuid,
+    pub author_id: uuid::Uuid,
     pub message: String,
-    pub created_at: DateTime<Utc>,
+    pub created_at: chrono::DateTime<chrono::Utc>,
 }

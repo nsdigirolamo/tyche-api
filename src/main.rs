@@ -1,6 +1,5 @@
 use handlers::rejection::handle_rejection;
 use repository::Repository;
-use sqlx::postgres::PgPoolOptions;
 use warp::Filter;
 
 pub mod handlers;
@@ -10,7 +9,7 @@ pub mod routes;
 
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
-    let pool = PgPoolOptions::new()
+    let pool = sqlx::postgres::PgPoolOptions::new()
         .max_connections(5)
         .connect("postgres://postgres:password@localhost:5432/postgres")
         .await?;

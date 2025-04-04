@@ -1,17 +1,14 @@
-use sqlx::{Pool, Postgres};
-use uuid::Uuid;
-
 use crate::models::dtos::post::CreatePostInput;
 use crate::models::entities::Post;
 use crate::models::errors::RepositoryError;
 
 #[derive(Clone)]
 pub struct Repository {
-    pool: Pool<Postgres>,
+    pool: sqlx::Pool<sqlx::Postgres>,
 }
 
 impl Repository {
-    pub fn new(pool: Pool<Postgres>) -> Repository {
+    pub fn new(pool: sqlx::Pool<sqlx::Postgres>) -> Repository {
         Repository { pool }
     }
 
@@ -26,7 +23,7 @@ impl Repository {
         .await.map_err(|err| err.into())
     }
 
-    pub async fn get_post(&self, id: Uuid) -> Result<Post, RepositoryError> {
+    pub async fn get_post(&self, id: uuid::Uuid) -> Result<Post, RepositoryError> {
         sqlx::query_as!(
             Post,
             "SELECT id, author_id, message, created_at FROM posts WHERE id = $1",
