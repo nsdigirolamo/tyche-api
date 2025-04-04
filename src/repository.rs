@@ -23,7 +23,7 @@ impl Repository {
             input.message
         )
         .fetch_one(&self.pool)
-        .await.map_err(|_| RepositoryError)
+        .await.map_err(|err| err.into())
     }
 
     pub async fn get_post(&self, id: Uuid) -> Result<Post, RepositoryError> {
@@ -34,10 +34,6 @@ impl Repository {
         )
         .fetch_one(&self.pool)
         .await
-        .map_err(|e| {
-            println!("{:?}", id);
-            println!("{:?}", e);
-            RepositoryError
-        })
+        .map_err(|err| err.into())
     }
 }

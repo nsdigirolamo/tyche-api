@@ -1,5 +1,7 @@
+use handlers::handle_rejection;
 use repository::Repository;
 use sqlx::postgres::PgPoolOptions;
+use warp::Filter;
 
 pub mod handlers;
 pub mod models;
@@ -14,7 +16,7 @@ async fn main() -> Result<(), sqlx::Error> {
         .await?;
     let db = Repository::new(pool);
 
-    let routes = routes::routes(db);
+    let routes = routes::routes(db).recover(handle_rejection);
     println!("Server running at http://localhost:8080");
     warp::serve(routes).run(([127, 0, 0, 1], 8080)).await;
 

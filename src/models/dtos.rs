@@ -47,3 +47,9 @@ impl From<Post> for ReadPostOutput {
         }
     }
 }
+
+#[derive(Serialize)]
+pub struct ErrorOutput {
+    pub code: u16,
+    pub message: String,
+}
