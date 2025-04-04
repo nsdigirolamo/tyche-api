@@ -14,6 +14,15 @@ pub async fn handle_rejection(
     } else if let Some(err) = rejection.find::<RepositoryError>() {
         code = err.status;
         message = err.message.clone();
+    } else if rejection.find::<warp::reject::MethodNotAllowed>().is_some() {
+        code = warp::http::StatusCode::METHOD_NOT_ALLOWED;
+        message = "Method not allowed.".to_string();
+    } else if rejection
+        .find::<warp::reject::UnsupportedMediaType>()
+        .is_some()
+    {
+        code = warp::http::StatusCode::UNSUPPORTED_MEDIA_TYPE;
+        message = "Unsupported media type.".to_string();
     } else {
         code = warp::http::StatusCode::INTERNAL_SERVER_ERROR;
         message = "Some error occured.".to_string();

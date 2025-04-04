@@ -1,0 +1,22 @@
+meta {
+  name: update_post
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8080/post/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 00000000-0000-0000-0000-000000000000
+}
+
+body:json {
+  {
+    "author_id": "00000000-0000-0000-0000-000000000000",
+    "message": "Hello, world! Here is an update!"
+  }
+}
