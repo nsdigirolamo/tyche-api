@@ -1,6 +1,6 @@
 use std::convert::Infallible;
 
-use crate::models::{dtos::ErrorOutput, errors::RepositoryError};
+use crate::models::{dtos::error::ErrorOutput, errors::RepositoryError};
 
 pub async fn handle_rejection(
     rejection: warp::reject::Rejection,

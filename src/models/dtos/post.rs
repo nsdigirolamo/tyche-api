@@ -1,21 +1,17 @@
-use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+use crate::models::entities::Post;
 
-use super::entities::Post;
-
-#[derive(Deserialize)]
+#[derive(serde::Deserialize)]
 pub struct CreatePostInput {
-    pub author_id: Uuid,
+    pub author_id: uuid::Uuid,
     pub message: String,
 }
 
-#[derive(Serialize)]
+#[derive(serde::Serialize)]
 pub struct CreatePostOutput {
-    pub id: Uuid,
-    pub author_id: Uuid,
+    pub id: uuid::Uuid,
+    pub author_id: uuid::Uuid,
     pub message: String,
-    pub created_at: DateTime<Utc>,
+    pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
 impl From<Post> for CreatePostOutput {
@@ -29,12 +25,12 @@ impl From<Post> for CreatePostOutput {
     }
 }
 
-#[derive(Serialize)]
+#[derive(serde::Serialize)]
 pub struct ReadPostOutput {
-    pub id: Uuid,
-    pub author_id: Uuid,
+    pub id: uuid::Uuid,
+    pub author_id: uuid::Uuid,
     pub message: String,
-    pub created_at: DateTime<Utc>,
+    pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
 impl From<Post> for ReadPostOutput {
@@ -46,10 +42,4 @@ impl From<Post> for ReadPostOutput {
             created_at: post.created_at,
         }
     }
-}
-
-#[derive(Serialize)]
-pub struct ErrorOutput {
-    pub code: u16,
-    pub message: String,
 }

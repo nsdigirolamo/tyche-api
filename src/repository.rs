@@ -1,7 +1,7 @@
 use sqlx::{Pool, Postgres};
 use uuid::Uuid;
 
-use crate::models::dtos::CreatePostInput;
+use crate::models::dtos::post::CreatePostInput;
 use crate::models::entities::Post;
 use crate::models::errors::RepositoryError;
 

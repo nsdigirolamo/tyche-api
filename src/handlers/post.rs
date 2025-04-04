@@ -1,7 +1,5 @@
-use uuid::Uuid;
-
 use crate::{
-    models::dtos::{CreatePostInput, CreatePostOutput, ReadPostOutput},
+    models::dtos::post::{CreatePostInput, CreatePostOutput, ReadPostOutput},
     repository::Repository,
 };
 
@@ -20,7 +18,7 @@ pub async fn create_post(
 
 pub async fn read_post(
     db: Repository,
-    id: Uuid,
+    id: uuid::Uuid,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
     let post = db.get_post(id).await?;
     let json = warp::reply::json(&ReadPostOutput::from(post));
