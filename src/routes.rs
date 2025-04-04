@@ -1,7 +1,8 @@
 use uuid::Uuid;
 use warp::Filter;
 
-use crate::{handlers, repository::Repository};
+use crate::handlers::post;
+use crate::repository::Repository;
 
 pub fn routes(
     db: Repository,
@@ -17,7 +18,7 @@ fn create_post(
         .and(warp::any().map(move || db.clone()))
         .and(warp::body::content_length_limit(1024 * 16))
         .and(warp::body::json())
-        .and_then(handlers::create_post)
+        .and_then(post::create_post)
 }
 
 fn read_post(
@@ -27,5 +28,5 @@ fn read_post(
         .map(move || db.clone())
         .and(warp::path!("posts" / Uuid))
         .and(warp::get())
-        .and_then(handlers::read_post)
+        .and_then(post::read_post)
 }

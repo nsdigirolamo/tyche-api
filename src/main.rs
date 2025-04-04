@@ -1,4 +1,4 @@
-use handlers::handle_rejection;
+use handlers::rejection::handle_rejection;
 use repository::Repository;
 use sqlx::postgres::PgPoolOptions;
 use warp::Filter;
