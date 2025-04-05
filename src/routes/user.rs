@@ -20,7 +20,7 @@ fn create_user(
         .and(warp::any().map(move || db.clone()))
         .and(warp::body::content_length_limit(1024 * 16))
         .and(warp::body::json())
-        .and_then(user::create_user)
+        .and_then(user::create)
 }
 
 fn read_user(
@@ -30,7 +30,7 @@ fn read_user(
         .map(move || db.clone())
         .and(warp::path!("user" / Uuid))
         .and(warp::get())
-        .and_then(user::read_user)
+        .and_then(user::read)
 }
 
 fn update_user(
@@ -42,7 +42,7 @@ fn update_user(
         .and(warp::put())
         .and(warp::body::content_length_limit(1024 * 16))
         .and(warp::body::json())
-        .and_then(user::update_user)
+        .and_then(user::update)
 }
 
 fn delete_user(
@@ -52,5 +52,5 @@ fn delete_user(
         .map(move || db.clone())
         .and(warp::path!("user" / Uuid))
         .and(warp::delete())
-        .and_then(user::delete_user)
+        .and_then(user::delete)
 }

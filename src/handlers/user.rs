@@ -3,7 +3,7 @@ use crate::{
     repositories::{Repository, user::UserRepository},
 };
 
-pub async fn create_user(
+pub async fn create(
     db: UserRepository,
     input: UserInput,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
@@ -16,7 +16,7 @@ pub async fn create_user(
     ))
 }
 
-pub async fn read_user(
+pub async fn read(
     db: UserRepository,
     id: uuid::Uuid,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
@@ -26,7 +26,7 @@ pub async fn read_user(
     Ok(warp::reply::with_status(json, warp::http::StatusCode::OK))
 }
 
-pub async fn update_user(
+pub async fn update(
     db: UserRepository,
     id: uuid::Uuid,
     input: UserInput,
@@ -40,7 +40,7 @@ pub async fn update_user(
     ))
 }
 
-pub async fn delete_user(
+pub async fn delete(
     db: UserRepository,
     id: uuid::Uuid,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {

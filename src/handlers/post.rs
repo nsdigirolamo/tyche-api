@@ -3,7 +3,7 @@ use crate::{
     repositories::{Repository, post::PostRepository},
 };
 
-pub async fn create_post(
+pub async fn create(
     db: PostRepository,
     input: PostInput,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
@@ -16,7 +16,7 @@ pub async fn create_post(
     ))
 }
 
-pub async fn read_post(
+pub async fn read(
     db: PostRepository,
     id: uuid::Uuid,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
@@ -26,7 +26,7 @@ pub async fn read_post(
     Ok(warp::reply::with_status(json, warp::http::StatusCode::OK))
 }
 
-pub async fn update_post(
+pub async fn update(
     db: PostRepository,
     id: uuid::Uuid,
     input: PostInput,
@@ -40,7 +40,7 @@ pub async fn update_post(
     ))
 }
 
-pub async fn delete_post(
+pub async fn delete(
     db: PostRepository,
     id: uuid::Uuid,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {

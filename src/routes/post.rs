@@ -20,7 +20,7 @@ fn create_post(
         .and(warp::any().map(move || db.clone()))
         .and(warp::body::content_length_limit(1024 * 16))
         .and(warp::body::json())
-        .and_then(post::create_post)
+        .and_then(post::create)
 }
 
 fn read_post(
@@ -30,7 +30,7 @@ fn read_post(
         .map(move || db.clone())
         .and(warp::path!("post" / Uuid))
         .and(warp::get())
-        .and_then(post::read_post)
+        .and_then(post::read)
 }
 
 fn update_post(
@@ -42,7 +42,7 @@ fn update_post(
         .and(warp::put())
         .and(warp::body::content_length_limit(1024 * 16))
         .and(warp::body::json())
-        .and_then(post::update_post)
+        .and_then(post::update)
 }
 
 fn delete_post(
@@ -52,5 +52,5 @@ fn delete_post(
         .map(move || db.clone())
         .and(warp::path!("post" / Uuid))
         .and(warp::delete())
-        .and_then(post::delete_post)
+        .and_then(post::delete)
 }
