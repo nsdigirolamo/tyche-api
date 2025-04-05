@@ -1,4 +1,4 @@
-use std::convert::Infallible;
+use std::{convert::Infallible, error::Error};
 
 use crate::models::{dtos::error::ErrorOutput, errors::RepositoryError};
 
@@ -23,8 +23,13 @@ pub async fn handle_rejection(
     {
         code = warp::http::StatusCode::UNSUPPORTED_MEDIA_TYPE;
         message = "Unsupported media type.".to_string();
+    } else if let Some(err) = rejection.find::<warp::filters::body::BodyDeserializeError>() {
+        code = warp::http::StatusCode::BAD_REQUEST;
+        message = match err.source() {
+            Some(cause) => format!("Bad request: {}", cause),
+            None => "Bad request.".to_string(),
+        };
     } else {
-        println!("{:?}", rejection);
         code = warp::http::StatusCode::INTERNAL_SERVER_ERROR;
         message = "Some error occured.".to_string();
     }
