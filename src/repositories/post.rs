@@ -17,9 +17,12 @@ impl Repository<Post, PostInput> for PostRepository {
     async fn create(&self, input: PostInput) -> Result<Post, RepositoryError> {
         sqlx::query_as!(
             Post,
-            "INSERT INTO posts (author_id, message) VALUES ($1, $2) RETURNING id, author_id, message, created_at",
+            "INSERT INTO posts (parent_id, author_id, body)
+                VALUES ($1, $2, $3)
+                RETURNING id, parent_id, author_id, body, created_at",
+            input.parent_id,
             input.author_id,
-            input.message
+            input.body
         )
         .fetch_one(&self.pool)
         .await
@@ -29,7 +32,7 @@ impl Repository<Post, PostInput> for PostRepository {
     async fn read(&self, id: uuid::Uuid) -> Result<Post, RepositoryError> {
         sqlx::query_as!(
             Post,
-            "SELECT id, author_id, message, created_at FROM posts WHERE id = $1",
+            "SELECT id, parent_id, author_id, body, created_at FROM posts WHERE id = $1",
             id,
         )
         .fetch_one(&self.pool)

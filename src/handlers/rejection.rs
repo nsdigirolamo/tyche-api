@@ -24,6 +24,7 @@ pub async fn handle_rejection(
         code = warp::http::StatusCode::UNSUPPORTED_MEDIA_TYPE;
         message = "Unsupported media type.".to_string();
     } else {
+        println!("{:?}", rejection);
         code = warp::http::StatusCode::INTERNAL_SERVER_ERROR;
         message = "Some error occured.".to_string();
     }
