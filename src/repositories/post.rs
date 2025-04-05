@@ -22,7 +22,8 @@ impl Repository<Post, PostInput> for PostRepository {
             input.message
         )
         .fetch_one(&self.pool)
-        .await.map_err(|err| err.into())
+        .await
+        .map_err(|err| err.into())
     }
 
     async fn read(&self, id: uuid::Uuid) -> Result<Post, RepositoryError> {
