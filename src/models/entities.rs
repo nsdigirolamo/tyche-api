@@ -5,3 +5,11 @@ pub struct Post {
     pub message: String,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
+
+#[derive(Debug)]
+pub struct User {
+    pub id: uuid::Uuid,
+    pub username: String,
+    pub password: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}

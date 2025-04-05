@@ -1,0 +1,22 @@
+meta {
+  name: update_user
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8080/user/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 00000000-0000-0000-0000-000000000000
+}
+
+body:json {
+  {
+    "username": "Hello, modified",
+    "password": "World, modified"
+  }
+}

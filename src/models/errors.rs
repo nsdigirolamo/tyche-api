@@ -13,10 +13,13 @@ impl From<sqlx::Error> for RepositoryError {
                 status: warp::http::StatusCode::NOT_FOUND,
                 message: "The requested resource could not be found.".to_string(),
             },
-            _ => RepositoryError {
-                status: warp::http::StatusCode::INTERNAL_SERVER_ERROR,
-                message: "A database error occured.".to_string(),
-            },
+            _ => {
+                println!("{:?}", other);
+                RepositoryError {
+                    status: warp::http::StatusCode::INTERNAL_SERVER_ERROR,
+                    message: "A database error occured.".to_string(),
+                }
+            }
         }
     }
 }

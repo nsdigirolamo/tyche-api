@@ -1,8 +1,7 @@
 use uuid::Uuid;
 use warp::Filter;
 
-use crate::handlers::post;
-use crate::repositories::post::PostRepository;
+use crate::{handlers::post, repositories::post::PostRepository};
 
 pub fn routes(
     db: PostRepository,

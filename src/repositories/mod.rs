@@ -1,6 +1,7 @@
 use crate::models::errors::RepositoryError;
 
 pub mod post;
+pub mod user;
 
 pub trait Repository<T, U> {
     fn create(
