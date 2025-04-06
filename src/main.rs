@@ -21,7 +21,19 @@ async fn main() -> Result<(), sqlx::Error> {
         .await?;
     let user_repository = UserRepository::new(user_pool);
 
-    let routes = routes::routes(user_repository, post_repository).recover(handle_rejection);
+    let cors = warp::cors()
+        .allow_origins(vec!["http://localhost:5173"])
+        .allow_methods(vec!["GET", "POST", "PUT", "DELETE"])
+        .allow_headers(vec![
+            "Access-Control-Allow-Origin",
+            "Access-Control-Request-Headers",
+            "content-type",
+        ])
+        .build();
+    let routes = routes::routes(user_repository, post_repository)
+        .recover(handle_rejection)
+        .with(cors);
+
     println!("Server running at http://localhost:8080");
     warp::serve(routes).run(([127, 0, 0, 1], 8080)).await;
 
