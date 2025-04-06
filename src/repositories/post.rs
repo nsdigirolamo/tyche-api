@@ -13,15 +13,15 @@ impl PostRepository {
     }
 }
 
-impl Repository<Post, PostInput> for PostRepository {
+impl Repository<Post, PostInput, uuid::Uuid> for PostRepository {
     async fn create(&self, input: PostInput) -> Result<Post, RepositoryError> {
         sqlx::query_as!(
             Post,
-            "INSERT INTO posts (parent_id, author_id, body)
+            "INSERT INTO posts (parent_id, author_name, body)
                 VALUES ($1, $2, $3)
-                RETURNING id, parent_id, author_id, body, created_at",
+                RETURNING *",
             input.parent_id,
-            input.author_id,
+            input.author_name,
             input.body
         )
         .fetch_one(&self.pool)
@@ -29,15 +29,11 @@ impl Repository<Post, PostInput> for PostRepository {
         .map_err(|err| err.into())
     }
 
-    async fn read(&self, id: uuid::Uuid) -> Result<Post, RepositoryError> {
-        sqlx::query_as!(
-            Post,
-            "SELECT id, parent_id, author_id, body, created_at FROM posts WHERE id = $1",
-            id,
-        )
-        .fetch_one(&self.pool)
-        .await
-        .map_err(|err| err.into())
+    async fn read(&self, primary_key: uuid::Uuid) -> Result<Post, RepositoryError> {
+        sqlx::query_as!(Post, "SELECT * FROM posts WHERE id = $1", primary_key,)
+            .fetch_one(&self.pool)
+            .await
+            .map_err(|err| err.into())
     }
 
     async fn update(&self, _: uuid::Uuid, _: PostInput) -> Result<Post, RepositoryError> {

@@ -14,12 +14,12 @@ impl UserRepository {
     }
 }
 
-impl Repository<User, UserInput> for UserRepository {
+impl Repository<User, UserInput, String> for UserRepository {
     async fn create(&self, input: UserInput) -> Result<User, RepositoryError> {
         sqlx::query_as!(
             User,
-            "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username, password, created_at",
-            input.username,
+            "INSERT INTO users (name, password) VALUES ($1, $2) RETURNING *",
+            input.name,
             input.password,
         )
         .fetch_one(&self.pool)
@@ -27,25 +27,21 @@ impl Repository<User, UserInput> for UserRepository {
         .map_err(|err| err.into())
     }
 
-    async fn read(&self, id: uuid::Uuid) -> Result<User, RepositoryError> {
-        sqlx::query_as!(
-            User,
-            "SELECT id, username, password, created_at FROM users WHERE id = $1",
-            id
-        )
-        .fetch_one(&self.pool)
-        .await
-        .map_err(|err| err.into())
+    async fn read(&self, primary_key: String) -> Result<User, RepositoryError> {
+        sqlx::query_as!(User, "SELECT * FROM users WHERE name = $1", primary_key)
+            .fetch_one(&self.pool)
+            .await
+            .map_err(|err| err.into())
     }
 
-    async fn update(&self, _: uuid::Uuid, _: UserInput) -> Result<User, RepositoryError> {
+    async fn update(&self, _: String, _: UserInput) -> Result<User, RepositoryError> {
         Err(RepositoryError {
             status: warp::http::StatusCode::NOT_IMPLEMENTED,
             message: "Update is not implemented for user".to_string(),
         })
     }
 
-    async fn delete(&self, _: uuid::Uuid) -> Option<RepositoryError> {
+    async fn delete(&self, _: String) -> Option<RepositoryError> {
         Some(RepositoryError {
             status: warp::http::StatusCode::NOT_IMPLEMENTED,
             message: "Delete is not implemented for user".to_string(),

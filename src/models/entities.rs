@@ -1,7 +1,6 @@
 #[derive(Debug)]
 pub struct User {
-    pub id: uuid::Uuid,
-    pub username: String,
+    pub name: String,
     pub password: String,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
@@ -10,7 +9,7 @@ pub struct User {
 pub struct Post {
     pub id: uuid::Uuid,
     pub parent_id: Option<uuid::Uuid>,
-    pub author_id: uuid::Uuid,
+    pub author_name: String,
     pub body: String,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }

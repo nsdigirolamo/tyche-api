@@ -18,9 +18,9 @@ pub async fn create(
 
 pub async fn read(
     db: UserRepository,
-    id: uuid::Uuid,
+    name: String,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
-    let post = db.read(id).await?;
+    let post = db.read(name).await?;
     let json = warp::reply::json(&UserOutput::from(post));
 
     Ok(warp::reply::with_status(json, warp::http::StatusCode::OK))
@@ -28,10 +28,10 @@ pub async fn read(
 
 pub async fn update(
     db: UserRepository,
-    id: uuid::Uuid,
+    name: String,
     input: UserInput,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
-    let post = db.update(id, input).await?;
+    let post = db.update(name, input).await?;
     let json = warp::reply::json(&UserOutput::from(post));
 
     Ok(warp::reply::with_status(
@@ -42,9 +42,9 @@ pub async fn update(
 
 pub async fn delete(
     db: UserRepository,
-    id: uuid::Uuid,
+    name: String,
 ) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
-    match db.delete(id).await {
+    match db.delete(name).await {
         Some(err) => Err(err.into()),
         None => Ok(warp::http::StatusCode::OK),
     }

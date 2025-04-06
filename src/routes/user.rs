@@ -1,4 +1,3 @@
-use uuid::Uuid;
 use warp::Filter;
 
 use crate::{handlers::user, repositories::user::UserRepository};
@@ -28,7 +27,7 @@ fn read_user(
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::any()
         .map(move || db.clone())
-        .and(warp::path!("user" / Uuid))
+        .and(warp::path!("user" / String))
         .and(warp::get())
         .and_then(user::read)
 }
@@ -38,7 +37,7 @@ fn update_user(
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::any()
         .map(move || db.clone())
-        .and(warp::path!("user" / Uuid))
+        .and(warp::path!("user" / String))
         .and(warp::put())
         .and(warp::body::content_length_limit(1024 * 16))
         .and(warp::body::json())
@@ -50,7 +49,7 @@ fn delete_user(
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::any()
         .map(move || db.clone())
-        .and(warp::path!("user" / Uuid))
+        .and(warp::path!("user" / String))
         .and(warp::delete())
         .and_then(user::delete)
 }

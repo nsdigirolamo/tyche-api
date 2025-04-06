@@ -5,18 +5,18 @@ meta {
 }
 
 put {
-  url: http://localhost:8080/user/:id
+  url: http://localhost:8080/user/:name
   body: json
   auth: inherit
 }
 
 params:path {
-  id: 00000000-0000-0000-0000-000000000000
+  name: John_Smith
 }
 
 body:json {
   {
-    "username": "Hello, modified",
-    "password": "World, modified"
+    "username": "John_Smith",
+    "password": "a_new_secure_password"
   }
 }
