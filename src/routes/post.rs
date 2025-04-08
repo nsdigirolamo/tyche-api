@@ -6,13 +6,13 @@ use crate::{handlers::post, repositories::post::PostRepository};
 pub fn routes(
     db: PostRepository,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    create_post(db.clone())
-        .or(read_post(db.clone()))
-        .or(update_post(db.clone()))
-        .or(delete_post(db.clone()))
+    create_one(db.clone())
+        .or(find_one_by_id(db.clone()))
+        .or(find_many_without_parents(db.clone()))
+        .or(find_many_by_parent_id(db.clone()))
 }
 
-fn create_post(
+fn create_one(
     db: PostRepository,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("post")
@@ -20,37 +20,35 @@ fn create_post(
         .and(warp::any().map(move || db.clone()))
         .and(warp::body::content_length_limit(1024 * 16))
         .and(warp::body::json())
-        .and_then(post::create)
+        .and_then(post::create_one)
 }
 
-fn read_post(
+fn find_one_by_id(
     db: PostRepository,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::any()
         .map(move || db.clone())
         .and(warp::path!("post" / Uuid))
         .and(warp::get())
-        .and_then(post::read)
+        .and_then(post::find_one_by_id)
 }
 
-fn update_post(
+fn find_many_without_parents(
     db: PostRepository,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::any()
         .map(move || db.clone())
-        .and(warp::path!("post" / Uuid))
-        .and(warp::put())
-        .and(warp::body::content_length_limit(1024 * 16))
-        .and(warp::body::json())
-        .and_then(post::update)
+        .and(warp::path!("posts"))
+        .and(warp::get())
+        .and_then(post::find_many_without_parents)
 }
 
-fn delete_post(
+fn find_many_by_parent_id(
     db: PostRepository,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::any()
         .map(move || db.clone())
-        .and(warp::path!("post" / Uuid))
-        .and(warp::delete())
-        .and_then(post::delete)
+        .and(warp::path!("post" / Uuid / "children"))
+        .and(warp::get())
+        .and_then(post::find_many_by_parent_id)
 }

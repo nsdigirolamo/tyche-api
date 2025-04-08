@@ -8,6 +8,7 @@ pub struct UserInput {
 
 #[derive(serde::Serialize)]
 pub struct UserOutput {
+    pub id: uuid::Uuid,
     pub name: String,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
@@ -15,6 +16,7 @@ pub struct UserOutput {
 impl From<User> for UserOutput {
     fn from(user: User) -> Self {
         UserOutput {
+            id: user.id,
             name: user.name,
             created_at: user.created_at,
         }

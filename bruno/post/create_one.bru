@@ -1,5 +1,5 @@
 meta {
-  name: create_post
+  name: create_one
   type: http
   seq: 1
 }
@@ -12,7 +12,8 @@ post {
 
 body:json {
   {
-    "author_name": "John_Smith",
+    "parent_id": null,
+    "author_id": "00000000-0000-0000-0000-000000000000",
     "body": "Hello, world!"
   }
 }

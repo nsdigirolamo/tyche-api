@@ -1,17 +1,17 @@
 meta {
-  name: update_post
+  name: find_many_by_parent_id
   type: http
-  seq: 3
+  seq: 4
 }
 
-put {
-  url: http://localhost:8080/post/:id
+get {
+  url: http://localhost:8080/post/:id/children
   body: json
   auth: inherit
 }
 
 params:path {
-  id: 344c3905-eee4-4675-955d-bfbe4128dbc4
+  id: 00000000-0000-0000-0000-000000000000
 }
 
 body:json {
