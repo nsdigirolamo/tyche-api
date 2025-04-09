@@ -23,3 +23,11 @@ impl From<sqlx::Error> for RepositoryError {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct AuthError {
+    pub status: warp::http::StatusCode,
+    pub message: String,
+}
+
+impl warp::reject::Reject for AuthError {}

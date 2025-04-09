@@ -22,3 +22,13 @@ impl From<User> for UserOutput {
         }
     }
 }
+
+impl From<&User> for UserOutput {
+    fn from(user: &User) -> Self {
+        UserOutput {
+            id: user.id,
+            name: user.name.clone(),
+            created_at: user.created_at,
+        }
+    }
+}

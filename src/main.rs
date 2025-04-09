@@ -1,11 +1,13 @@
 use handlers::rejection::handle_rejection;
 use repositories::{post::PostRepository, user::UserRepository};
+use services::auth::AuthenticationService;
 use warp::Filter;
 
 pub mod handlers;
 pub mod models;
 pub mod repositories;
 pub mod routes;
+pub mod services;
 
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
@@ -21,6 +23,8 @@ async fn main() -> Result<(), sqlx::Error> {
         .await?;
     let user_repository = UserRepository::new(user_pool);
 
+    let auth_service = AuthenticationService::new(user_repository.clone());
+
     let cors = warp::cors()
         .allow_origins(vec!["http://localhost:5173"])
         .allow_methods(vec!["GET", "POST", "PUT", "DELETE"])
@@ -30,7 +34,7 @@ async fn main() -> Result<(), sqlx::Error> {
             "content-type",
         ])
         .build();
-    let routes = routes::routes(user_repository, post_repository)
+    let routes = routes::routes(auth_service, user_repository, post_repository)
         .recover(handle_rejection)
         .with(cors);
 

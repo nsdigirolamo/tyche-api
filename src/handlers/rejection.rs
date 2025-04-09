@@ -1,6 +1,9 @@
 use std::{convert::Infallible, error::Error};
 
-use crate::models::{dtos::error::ErrorOutput, errors::RepositoryError};
+use crate::models::{
+    dtos::error::ErrorOutput,
+    errors::{AuthError, RepositoryError},
+};
 
 pub async fn handle_rejection(
     rejection: warp::reject::Rejection,
@@ -12,6 +15,9 @@ pub async fn handle_rejection(
         code = warp::http::StatusCode::NOT_FOUND;
         message = "Not found.".to_string();
     } else if let Some(err) = rejection.find::<RepositoryError>() {
+        code = err.status;
+        message = err.message.clone();
+    } else if let Some(err) = rejection.find::<AuthError>() {
         code = err.status;
         message = err.message.clone();
     } else if rejection.find::<warp::reject::MethodNotAllowed>().is_some() {

@@ -1,6 +1,6 @@
 use crate::models::{dtos::user::UserInput, entities::User, errors::RepositoryError};
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct UserRepository {
     pool: sqlx::Pool<sqlx::Postgres>,
 }

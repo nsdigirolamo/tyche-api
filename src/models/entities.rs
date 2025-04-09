@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct User {
     pub id: uuid::Uuid,
     pub name: String,
@@ -6,7 +6,7 @@ pub struct User {
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Post {
     pub id: uuid::Uuid,
     pub parent_id: Option<uuid::Uuid>,
