@@ -1,3 +1,5 @@
+use actix_web::{HttpRequest, HttpResponse, Responder, body::BoxBody, http::header::ContentType};
+
 use crate::models::entities::User;
 
 #[derive(serde::Deserialize)]
@@ -23,12 +25,14 @@ impl From<User> for UserOutput {
     }
 }
 
-impl From<&User> for UserOutput {
-    fn from(user: &User) -> Self {
-        UserOutput {
-            id: user.id,
-            name: user.name.clone(),
-            created_at: user.created_at,
-        }
+impl Responder for UserOutput {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &HttpRequest) -> HttpResponse<Self::Body> {
+        let body = serde_json::to_string(&self).unwrap();
+
+        HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .body(body)
     }
 }

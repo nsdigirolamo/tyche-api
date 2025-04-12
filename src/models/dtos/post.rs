@@ -1,3 +1,5 @@
+use actix_web::{HttpRequest, HttpResponse, Responder, body::BoxBody, http::header::ContentType};
+
 use crate::models::entities::Post;
 
 #[derive(serde::Deserialize)]
@@ -37,5 +39,17 @@ impl From<&Post> for PostOutput {
             body: post.body.clone(),
             created_at: post.created_at,
         }
+    }
+}
+
+impl Responder for PostOutput {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &HttpRequest) -> HttpResponse<Self::Body> {
+        let body = serde_json::to_string(&self).unwrap();
+
+        HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .body(body)
     }
 }

@@ -1,56 +1,61 @@
+use actix_web::{
+    Either, HttpResponse,
+    web::{Data, Json, Path},
+};
+
 use crate::{
-    models::dtos::post::{PostInput, PostOutput},
+    models::{
+        dtos::post::{PostInput, PostOutput},
+        errors::RepositoryError,
+    },
     repositories::post::PostRepository,
 };
 
-pub async fn create_one(
-    db: PostRepository,
-    input: PostInput,
-) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
-    let post = db.create_one(input).await?;
-    let json = warp::reply::json(&PostOutput::from(post));
+type PostResult = Either<PostOutput, Result<&'static str, RepositoryError>>;
+type ManyPostResult = Either<HttpResponse, Result<&'static str, RepositoryError>>;
 
-    Ok(warp::reply::with_status(
-        json,
-        warp::http::StatusCode::CREATED,
-    ))
+pub async fn create_one(
+    post_repository: Data<PostRepository>,
+    json: Json<PostInput>,
+) -> PostResult {
+    let post_input = json.into_inner();
+    match post_repository.create_one(post_input).await {
+        Ok(post) => Either::Left(PostOutput::from(post)),
+        Err(err) => Either::Right(Err(err)),
+    }
 }
 
 pub async fn find_one_by_id(
-    db: PostRepository,
-    id: uuid::Uuid,
-) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
-    let post = db.find_one_by_id(id).await?;
-    let json = warp::reply::json(&PostOutput::from(post));
-
-    Ok(warp::reply::with_status(json, warp::http::StatusCode::OK))
+    post_repository: Data<PostRepository>,
+    path: Path<uuid::Uuid>,
+) -> PostResult {
+    let post_id = path.into_inner();
+    match post_repository.find_one_by_id(post_id).await {
+        Ok(post) => Either::Left(PostOutput::from(post)),
+        Err(err) => Either::Right(Err(err)),
+    }
 }
 
-pub async fn find_many_without_parents(
-    db: PostRepository,
-) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
-    let posts = db
-        .find_many_by_parent_id(None)
-        .await?
-        .iter()
-        .map(PostOutput::from)
-        .collect::<Vec<PostOutput>>();
-    let json = warp::reply::json(&posts);
-
-    Ok(warp::reply::with_status(json, warp::http::StatusCode::OK))
+pub async fn find_many_without_parents(post_repository: Data<PostRepository>) -> ManyPostResult {
+    match post_repository.find_many_by_parent_id(None).await {
+        Ok(posts) => {
+            let post_outputs: Vec<PostOutput> = posts.iter().map(PostOutput::from).collect();
+            Either::Left(HttpResponse::Ok().json(post_outputs))
+        }
+        Err(err) => Either::Right(Err(err)),
+    }
 }
 
 pub async fn find_many_by_parent_id(
-    db: PostRepository,
-    parent_id: uuid::Uuid,
-) -> Result<impl warp::reply::Reply, warp::reject::Rejection> {
-    let posts = db
-        .find_many_by_parent_id(Some(parent_id))
-        .await?
-        .iter()
-        .map(PostOutput::from)
-        .collect::<Vec<PostOutput>>();
-    let json = warp::reply::json(&posts);
-
-    Ok(warp::reply::with_status(json, warp::http::StatusCode::OK))
+    post_repository: Data<PostRepository>,
+    path: Path<uuid::Uuid>,
+) -> ManyPostResult {
+    let parent_id = Some(path.into_inner());
+    match post_repository.find_many_by_parent_id(parent_id).await {
+        Ok(posts) => {
+            let post_outputs: Vec<PostOutput> = posts.iter().map(PostOutput::from).collect();
+            Either::Left(HttpResponse::Ok().json(post_outputs))
+        }
+        Err(err) => Either::Right(Err(err)),
+    }
 }
