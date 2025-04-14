@@ -1,15 +1,13 @@
-use actix_web::{HttpRequest, HttpResponse, Responder, body::BoxBody, http::header::ContentType};
-
 use crate::models::entities::Post;
 
-#[derive(serde::Deserialize)]
+#[derive(Debug, serde::Deserialize)]
 pub struct PostInput {
     pub parent_id: Option<uuid::Uuid>,
     pub author_id: uuid::Uuid,
     pub body: String,
 }
 
-#[derive(serde::Serialize)]
+#[derive(Debug, serde::Serialize)]
 pub struct PostOutput {
     pub id: uuid::Uuid,
     pub parent_id: Option<uuid::Uuid>,
@@ -39,17 +37,5 @@ impl From<&Post> for PostOutput {
             body: post.body.clone(),
             created_at: post.created_at,
         }
-    }
-}
-
-impl Responder for PostOutput {
-    type Body = BoxBody;
-
-    fn respond_to(self, _req: &HttpRequest) -> HttpResponse<Self::Body> {
-        let body = serde_json::to_string(&self).unwrap();
-
-        HttpResponse::Ok()
-            .content_type(ContentType::json())
-            .body(body)
     }
 }

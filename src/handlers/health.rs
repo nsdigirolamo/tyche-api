@@ -1,5 +1,4 @@
-use actix_web::Responder;
-
-pub async fn check() -> impl Responder {
+#[rocket::get("/check")]
+pub fn check() -> &'static str {
     "Health is OK :)"
 }
