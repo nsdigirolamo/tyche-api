@@ -3,7 +3,6 @@ use crate::models::entities::Post;
 #[derive(Debug, serde::Deserialize)]
 pub struct PostInput {
     pub parent_id: Option<uuid::Uuid>,
-    pub author_id: uuid::Uuid,
     pub body: String,
 }
 

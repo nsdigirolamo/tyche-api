@@ -23,6 +23,8 @@ pub enum RepositoryError {
     #[response(status = 400)]
     DuplicateResource(String),
     #[response(status = 500)]
+    RepositoryNotFound(String),
+    #[response(status = 500)]
     Unspecified(String),
 }
 
@@ -55,6 +57,8 @@ pub enum AuthError {
     InvalidToken(String),
     #[response(status = 400)]
     InvalidLogin(String),
+    #[response(status = 401)]
+    Unauthenticated(String),
     #[response(status = 500)]
     Unspecified(String),
 }
