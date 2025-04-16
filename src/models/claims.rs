@@ -38,8 +38,11 @@ pub fn encode_claims(user_id: Uuid) -> Result<String, AuthError> {
     };
 
     let header = jsonwebtoken::Header::new(JWT_ALGORITHM);
-    let secret = std::env::var("JWT_SECRET").expect("JWT_SECRET to be defined");
-    let key = EncodingKey::from_secret(secret.as_ref());
+    let key = EncodingKey::from_secret(
+        std::env::var("JWT_SECRET")
+            .expect("JWT_SECRET to be defined")
+            .as_ref(),
+    );
 
     match jsonwebtoken::encode(&header, &claims, &key) {
         Ok(token) => Ok(token),
@@ -48,8 +51,11 @@ pub fn encode_claims(user_id: Uuid) -> Result<String, AuthError> {
 }
 
 pub fn decode_claims(token: String) -> Result<Claims, AuthError> {
-    let secret = std::env::var("JWT_SECRET").expect("JWT_SECRET to be defined");
-    let key = jsonwebtoken::DecodingKey::from_secret(secret.as_ref());
+    let key = jsonwebtoken::DecodingKey::from_secret(
+        std::env::var("JWT_SECRET")
+            .expect("JWT_SECRET to be defined")
+            .as_ref(),
+    );
     let mut validation = jsonwebtoken::Validation::new(JWT_ALGORITHM);
     validation.set_issuer(&[ISSUER]);
     validation.set_audience(&[ISSUER]);
