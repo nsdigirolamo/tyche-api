@@ -22,14 +22,3 @@ impl From<User> for UserOutput {
         }
     }
 }
-
-#[derive(Debug, serde::Serialize)]
-pub struct LoginOutput {
-    token: String,
-}
-
-impl From<String> for LoginOutput {
-    fn from(token: String) -> Self {
-        LoginOutput { token }
-    }
-}

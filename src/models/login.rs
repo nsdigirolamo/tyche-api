@@ -14,6 +14,14 @@ use crate::{
     repositories::{self, user::UserRepository},
 };
 
+use super::dtos::user::UserOutput;
+
+#[derive(Debug, serde::Serialize)]
+pub struct LoginOutput {
+    pub user: UserOutput,
+    pub token: String,
+}
+
 #[derive(Debug)]
 pub struct LoginData {
     pub user: User,

@@ -3,8 +3,9 @@ use rocket::{response::status, serde::json::Json};
 use crate::{
     models::{
         claims::encode_claims,
-        dtos::user::{LoginOutput, UserInput, UserOutput},
+        dtos::user::{UserInput, UserOutput},
         errors::{AuthError, ErrorResponse, RepositoryError},
+        login::LoginOutput,
     },
     repositories::{self, user::UserRepository},
 };
@@ -82,7 +83,11 @@ pub async fn login(
         Err(err) => return Err(err.into()),
     };
 
-    let login_output = LoginOutput::from(token);
+    let login_output = LoginOutput {
+        user: UserOutput::from(user),
+        token,
+    };
+
     let response = Json(login_output);
 
     Ok(response)
