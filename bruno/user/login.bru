@@ -1,11 +1,11 @@
 meta {
-  name: create_one
+  name: login
   type: http
-  seq: 1
+  seq: 4
 }
 
 post {
-  url: http://localhost:8000/api/user/register
+  url: http://localhost:8000/api/user/login
   body: json
   auth: inherit
 }
