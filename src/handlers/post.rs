@@ -4,16 +4,23 @@ use crate::{
     models::{
         dtos::post::{PostInput, PostOutput},
         errors::RepositoryError,
+        login::LoginData,
     },
     repositories::{self, post::PostRepository},
 };
 
-#[rocket::post("/", data = "<input>")]
+#[rocket::post("/", data = "<json_input>")]
 pub async fn create_one(
     db: rocket_db_pools::Connection<PostRepository>,
-    input: Json<PostInput>,
+    login_data: LoginData,
+    json_input: Json<PostInput>,
 ) -> Result<status::Created<Json<PostOutput>>, RepositoryError> {
-    match repositories::post::create_one(db, input.into_inner()).await {
+    let post_input = json_input.into_inner();
+    let parent_id = post_input.parent_id;
+    let author_id = login_data.user.id;
+    let body = post_input.body;
+
+    match repositories::post::create_one(db, parent_id, author_id, body).await {
         Ok(post) => {
             let location = format!("/posts/{}", post.id);
             let output = PostOutput::from(post);

@@ -24,7 +24,10 @@ fn rocket() -> _ {
         .attach(UserRepository::init())
         .attach(PostRepository::init())
         .mount("/api/health", routes![handlers::health::check])
-        .mount("/api/user", routes![handlers::user::create_one,])
+        .mount(
+            "/api/user",
+            routes![handlers::user::create_one, handlers::user::login],
+        )
         .mount(
             "/api/users",
             routes![
