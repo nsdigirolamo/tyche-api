@@ -1,12 +1,14 @@
-#[derive(Debug, Clone)]
+use secrecy::SecretBox;
+
+#[derive(Debug)]
 pub struct User {
     pub id: uuid::Uuid,
     pub name: String,
-    pub password: String,
+    pub password_hash: SecretBox<[u8]>,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct Post {
     pub id: uuid::Uuid,
     pub parent_id: Option<uuid::Uuid>,

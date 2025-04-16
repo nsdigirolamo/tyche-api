@@ -1,9 +1,11 @@
+use secrecy::SecretBox;
+
 use crate::models::entities::User;
 
 #[derive(Debug, serde::Deserialize)]
 pub struct UserInput {
     pub name: String,
-    pub password: String,
+    pub password: SecretBox<String>,
 }
 
 #[derive(Debug, serde::Serialize)]

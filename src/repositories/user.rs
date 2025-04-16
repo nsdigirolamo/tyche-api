@@ -1,4 +1,5 @@
-use crate::models::dtos::user::UserInput;
+use secrecy::{ExposeSecret, SecretBox};
+
 use crate::models::entities::User;
 use crate::models::errors::RepositoryError;
 
@@ -8,13 +9,14 @@ pub struct UserRepository(rocket_db_pools::sqlx::PgPool);
 
 pub async fn create_one(
     mut db: rocket_db_pools::Connection<UserRepository>,
-    input: UserInput,
+    user_name: String,
+    user_password: SecretBox<Vec<u8>>,
 ) -> Result<User, RepositoryError> {
     sqlx::query_as!(
         User,
-        "INSERT INTO users (name, password) VALUES ($1, $2) RETURNING *",
-        input.name,
-        input.password,
+        "INSERT INTO users (name, password_hash) VALUES ($1, $2) RETURNING *",
+        user_name,
+        user_password.expose_secret(),
     )
     .fetch_one(&mut **db)
     .await
