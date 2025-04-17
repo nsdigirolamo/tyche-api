@@ -1,10 +1,12 @@
 use std::env;
 
+use middleware::cors::CorsMiddleware;
 use repositories::{post::PostRepository, user::UserRepository};
 use rocket::routes;
 use rocket_db_pools::Database;
 
 pub mod handlers;
+pub mod middleware;
 pub mod models;
 pub mod repositories;
 
@@ -21,12 +23,17 @@ fn rocket() -> _ {
         ));
 
     rocket::custom(figment)
+        .attach(CorsMiddleware)
         .attach(UserRepository::init())
         .attach(PostRepository::init())
         .mount("/api/health", routes![handlers::health::check])
         .mount(
             "/api/user",
-            routes![handlers::user::create_one, handlers::user::login],
+            routes![
+                handlers::user::create_one,
+                handlers::user::login,
+                handlers::user::option
+            ],
         )
         .mount(
             "/api/users",
