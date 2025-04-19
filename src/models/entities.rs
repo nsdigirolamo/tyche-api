@@ -14,5 +14,12 @@ pub struct Post {
     pub parent_id: Option<uuid::Uuid>,
     pub author_id: uuid::Uuid,
     pub body: String,
+    pub like_count: i32,
     pub created_at: chrono::DateTime<chrono::Utc>,
+}
+
+#[derive(Debug)]
+pub struct Like {
+    pub user_id: uuid::Uuid,
+    pub post_id: uuid::Uuid,
 }

@@ -13,10 +13,10 @@ secrecy = { version = "0.10.3", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 sha3 = { version = "0.10.8" }
 sqlx = { version = "0.7", default-features = false, features = [
+    "chrono",
     "macros",
     "migrate",
     "postgres",
     "uuid",
-    "chrono",
 ] }
 uuid = { version = "1.16.0", features = ["v4", "serde"] }

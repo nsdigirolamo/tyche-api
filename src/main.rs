@@ -1,7 +1,7 @@
 use std::env;
 
 use middleware::cors::CorsMiddleware;
-use repositories::{post::PostRepository, user::UserRepository};
+use repositories::{like::LikeRepository, post::PostRepository, user::UserRepository};
 use rocket::routes;
 use rocket_db_pools::Database;
 
@@ -25,12 +25,17 @@ fn rocket() -> _ {
         .merge((
             "databases.post_repository.url",
             env::var("DATABASE_URL").expect("DATABASE_URL must be set"),
+        ))
+        .merge((
+            "databases.like_repository.url",
+            env::var("DATABASE_URL").expect("DATABASE_URL must be set"),
         ));
 
     rocket::custom(figment)
         .attach(CorsMiddleware)
         .attach(UserRepository::init())
         .attach(PostRepository::init())
+        .attach(LikeRepository::init())
         .mount("/api/health", routes![handlers::health::check])
         .mount(
             "/api/user",
@@ -51,6 +56,14 @@ fn rocket() -> _ {
                 handlers::post::find_many_without_parents,
                 handlers::post::find_one_by_id,
                 handlers::post::find_many_by_parent_id,
+                option
+            ],
+        )
+        .mount(
+            "/api/like",
+            routes![
+                handlers::like::create_one,
+                handlers::like::delete_one,
                 option
             ],
         )
