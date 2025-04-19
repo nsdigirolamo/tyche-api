@@ -10,6 +10,11 @@ pub mod middleware;
 pub mod models;
 pub mod repositories;
 
+#[rocket::options("/<_path..>")]
+pub async fn option(_path: std::path::PathBuf) -> rocket::http::Status {
+    rocket::http::Status::Ok
+}
+
 #[rocket::launch]
 fn rocket() -> _ {
     let figment = rocket::Config::figment()
@@ -29,11 +34,7 @@ fn rocket() -> _ {
         .mount("/api/health", routes![handlers::health::check])
         .mount(
             "/api/user",
-            routes![
-                handlers::user::create_one,
-                handlers::user::login,
-                handlers::user::option
-            ],
+            routes![handlers::user::create_one, handlers::user::login, option],
         )
         .mount(
             "/api/users",
@@ -42,7 +43,7 @@ fn rocket() -> _ {
                 handlers::user::find_one_by_name
             ],
         )
-        .mount("/api/post", routes![handlers::post::create_one])
+        .mount("/api/post", routes![handlers::post::create_one, option])
         .mount(
             "/api/posts",
             routes![

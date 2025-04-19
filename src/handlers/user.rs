@@ -1,7 +1,5 @@
-use std::path::PathBuf;
-
 use regex::Regex;
-use rocket::{http::Status, response::status, serde::json::Json};
+use rocket::{response::status, serde::json::Json};
 use secrecy::{ExposeSecret, SecretBox};
 use sha3::Digest;
 
@@ -14,11 +12,6 @@ use crate::{
     },
     repositories::{self, user::UserRepository},
 };
-
-#[rocket::options("/<_path..>")]
-pub async fn option(_path: PathBuf) -> Status {
-    rocket::http::Status::Ok
-}
 
 #[rocket::post("/register", data = "<json_input>")]
 pub async fn create_one(

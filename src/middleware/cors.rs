@@ -22,6 +22,9 @@ impl Fairing for CorsMiddleware {
     ) {
         response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
         response.set_header(Header::new("Access-Control-Allow-Methods", "POST, GET"));
-        response.set_header(Header::new("Access-Control-Allow-Headers", "content-type"));
+        response.set_header(Header::new(
+            "Access-Control-Allow-Headers",
+            "Content-Type, Authorization",
+        ));
     }
 }
