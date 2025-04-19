@@ -40,7 +40,8 @@ fn rocket() -> _ {
             "/api/users",
             routes![
                 handlers::user::find_one_by_id,
-                handlers::user::find_one_by_name
+                handlers::user::find_one_by_name,
+                option
             ],
         )
         .mount("/api/post", routes![handlers::post::create_one, option])
@@ -49,7 +50,8 @@ fn rocket() -> _ {
             routes![
                 handlers::post::find_many_without_parents,
                 handlers::post::find_one_by_id,
-                handlers::post::find_many_by_parent_id
+                handlers::post::find_many_by_parent_id,
+                option
             ],
         )
 }
