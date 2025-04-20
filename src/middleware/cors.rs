@@ -21,7 +21,10 @@ impl Fairing for CorsMiddleware {
         response: &mut rocket::Response<'r>,
     ) {
         response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
-        response.set_header(Header::new("Access-Control-Allow-Methods", "POST, GET"));
+        response.set_header(Header::new(
+            "Access-Control-Allow-Methods",
+            "POST, GET, DELETE",
+        ));
         response.set_header(Header::new(
             "Access-Control-Allow-Headers",
             "Content-Type, Authorization",

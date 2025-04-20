@@ -1,7 +1,7 @@
-use rocket::http::Status;
+use rocket::{http::Status, serde::json::Json};
 
 use crate::{
-    models::{errors::RepositoryError, login::LoginData},
+    models::{dtos::like::LikeOutput, errors::RepositoryError, login::LoginData},
     repositories::{self, like::LikeRepository},
 };
 
@@ -16,6 +16,25 @@ pub async fn create_one(
     match repositories::like::create_one(db, user_id, post_id).await {
         Some(err) => Err(err),
         None => Ok(Status::Ok),
+    }
+}
+
+#[rocket::get("/<post_id>")]
+pub async fn find_one(
+    db: rocket_db_pools::Connection<LikeRepository>,
+    login_data: LoginData,
+    post_id: uuid::Uuid,
+) -> Result<Json<LikeOutput>, RepositoryError> {
+    let user_id = login_data.user.id;
+
+    match repositories::like::find_one(db, user_id, post_id).await {
+        Ok(exists) => {
+            let output = LikeOutput::from(exists);
+            let response = Json(output);
+
+            Ok(response)
+        }
+        Err(err) => Err(err),
     }
 }
 

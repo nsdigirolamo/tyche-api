@@ -67,4 +67,5 @@ fn rocket() -> _ {
                 option
             ],
         )
+        .mount("/api/likes", routes![handlers::like::find_one, option])
 }
