@@ -1,0 +1,29 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM likes WHERE user_id = $1 AND post_id = $2 RETURNING *",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "post_id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "9ac17d9567609a0c1a95b73ef2410617442076c63de3e32400b0d37ccf5f773f"
+}

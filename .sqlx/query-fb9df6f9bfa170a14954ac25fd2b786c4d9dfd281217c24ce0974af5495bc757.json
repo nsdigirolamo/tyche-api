@@ -1,0 +1,54 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO posts (parent_id, author_id, body)\n                VALUES ($1, $2, $3)\n                RETURNING *",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "parent_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "author_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 3,
+        "name": "body",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "like_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "fb9df6f9bfa170a14954ac25fd2b786c4d9dfd281217c24ce0974af5495bc757"
+}

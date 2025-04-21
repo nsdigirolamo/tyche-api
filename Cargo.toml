@@ -3,6 +3,10 @@ name = "tyche"
 version = "0.1.0"
 edition = "2024"
 
+[[bin]]
+name = "tyche"
+path = "src/main.rs"
+
 [dependencies]
 chrono = { version = "0.4.40", features = ["serde"] }
 jsonwebtoken = "9.3.1"
