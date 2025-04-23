@@ -11,7 +11,7 @@ COPY .sqlx .sqlx
 
 RUN cargo build --release
 
-FROM debian:12.10-slim
+FROM debian:12.10
 WORKDIR /app
 COPY --from=builder /usr/src/tyche-api/target/release/tyche .
 

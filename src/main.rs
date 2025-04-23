@@ -18,6 +18,7 @@ pub async fn option(_path: std::path::PathBuf) -> rocket::http::Status {
 #[rocket::launch]
 fn rocket() -> _ {
     let figment = rocket::Config::figment()
+        .merge(("address", "0.0.0.0"))
         .merge((
             "databases.user_repository.url",
             env::var("DATABASE_URL").expect("DATABASE_URL must be set"),

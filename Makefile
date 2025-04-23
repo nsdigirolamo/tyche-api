@@ -30,7 +30,9 @@ db-enter:
 	sudo docker exec -it tyche-postgres psql -U postgres
 
 docker-build:
-	sudo docker build -t nsdigirolamo/tyche:api .
+	sudo docker build -t nsdigirolamo/tyche:api . && \
+	cd migrations && sudo docker build -t nsdigirolamo/tyche:db .
 
 docker-push:
-	sudo docker push nsdigirolamo/tyche:api
+	sudo docker push nsdigirolamo/tyche:api && \
+	cd migrations && sudo docker build -t nsdigirolamo/tyche:db .
