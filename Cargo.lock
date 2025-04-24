@@ -2536,6 +2536,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "jsonwebtoken",
+ "once_cell",
  "regex",
  "rocket",
  "rocket_db_pools",

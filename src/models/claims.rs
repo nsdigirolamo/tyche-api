@@ -1,5 +1,8 @@
+use std::{env, fs};
+
 use chrono::{Duration, Utc};
 use jsonwebtoken::EncodingKey;
+use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -7,6 +10,11 @@ use super::errors::AuthError;
 
 const JWT_ALGORITHM: jsonwebtoken::Algorithm = jsonwebtoken::Algorithm::HS512;
 const ISSUER: &str = "api.tyche.social";
+
+static JWT_SECRET: Lazy<String> = Lazy::new(|| {
+    fs::read_to_string(env::var("JWT_SECRET_FILE").expect("JWT_SECRET_FILE must be set"))
+        .expect("JWT_SECRET_FILE must be readable")
+});
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Claims {
@@ -38,11 +46,7 @@ pub fn encode_claims(user_id: Uuid) -> Result<String, AuthError> {
     };
 
     let header = jsonwebtoken::Header::new(JWT_ALGORITHM);
-    let key = EncodingKey::from_secret(
-        std::env::var("JWT_SECRET")
-            .expect("JWT_SECRET to be defined")
-            .as_ref(),
-    );
+    let key = EncodingKey::from_secret(JWT_SECRET.as_bytes());
 
     match jsonwebtoken::encode(&header, &claims, &key) {
         Ok(token) => Ok(token),
@@ -51,11 +55,7 @@ pub fn encode_claims(user_id: Uuid) -> Result<String, AuthError> {
 }
 
 pub fn decode_claims(token: String) -> Result<Claims, AuthError> {
-    let key = jsonwebtoken::DecodingKey::from_secret(
-        std::env::var("JWT_SECRET")
-            .expect("JWT_SECRET to be defined")
-            .as_ref(),
-    );
+    let key = jsonwebtoken::DecodingKey::from_secret(JWT_SECRET.as_bytes());
     let mut validation = jsonwebtoken::Validation::new(JWT_ALGORITHM);
     validation.set_issuer(&[ISSUER]);
     validation.set_audience(&[ISSUER]);
