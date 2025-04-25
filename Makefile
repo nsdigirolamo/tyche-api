@@ -35,4 +35,4 @@ docker-build:
 
 docker-push:
 	sudo docker push nsdigirolamo/tyche:api && \
-	cd migrations && sudo docker build -t nsdigirolamo/tyche:db .
+	sudo docker push nsdigirolamo/tyche:db

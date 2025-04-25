@@ -1,3 +1,6 @@
+use std::env;
+
+use once_cell::sync::Lazy;
 use rocket::{
     Request,
     fairing::{Fairing, Info, Kind},
@@ -5,6 +8,9 @@ use rocket::{
 };
 
 pub struct CorsMiddleware;
+
+static ALLOWED_ORIGIN: Lazy<String> =
+    Lazy::new(|| env::var("ALLOWED_ORIGIN").expect("ALLOWED_ORIGIN must be set"));
 
 #[rocket::async_trait]
 impl Fairing for CorsMiddleware {
@@ -20,7 +26,10 @@ impl Fairing for CorsMiddleware {
         _request: &'r Request<'_>,
         response: &mut rocket::Response<'r>,
     ) {
-        response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
+        response.set_header(Header::new(
+            "Access-Control-Allow-Origin",
+            ALLOWED_ORIGIN.to_string(),
+        ));
         response.set_header(Header::new(
             "Access-Control-Allow-Methods",
             "POST, GET, DELETE",
