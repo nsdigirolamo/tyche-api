@@ -10,13 +10,14 @@ running:
 3. [direnv](https://direnv.net/docs/installation.html)
 4. [pre-commit](https://pre-commit.com/#intro)
 5. [sqlx-cli](https://github.com/launchbadge/sqlx/blob/main/sqlx-cli/README.md#install)
+6. [GNU Make](https://www.gnu.org/software/make/)
 
 When prompted, run `direnv allow` from the root of Tyche's repository.
 
 ## Environment Variables
 
-Tyche requires the following environment variables be defined in the `.env`
-file:
+The following environment variables must be defined in an `.env` file at the
+root of the repository:
 
 | Variable Key             | Variable Description                                                           |
 | ------------------------ | ------------------------------------------------------------------------------ |
@@ -27,6 +28,29 @@ file:
 | `DATABASE_URL_FILE`      | An absolute path to a file containing the DB URL.                              |
 | `JWT_SECRET_FILE`        | An absolute path to a file containing a secret that will be used to sign JWTs. |
 
+The above environment variables should not contain sensitive information. The
+files some variables point to may contain sensitive information.
+
 ## Running
 
-Use `cargo run` to run the development build of the application.
+First, run `make db-create` to start a docker container running the development
+PostgreSQL database.
+
+First, run the following to start a development PostgreSQL server in a docker
+container:
+
+```sh
+make db-create
+```
+
+Next, run the following to execute the migration scripts for the database:
+
+```sh
+make db-migrate-run
+```
+
+Finally, run the following to start the development build of the application:
+
+```sh
+cargo run
+```
