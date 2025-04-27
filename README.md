@@ -1,4 +1,4 @@
-# Tyche
+# Tyche API (Backend)
 
 ## Prerequisites
 
@@ -15,10 +15,18 @@ When prompted, run `direnv allow` from the root of Tyche's repository.
 
 ## Environment Variables
 
-Tyche requires the following environment variables be defined:
+Tyche requires the following environment variables be defined in the `.env`
+file:
 
-| Variable Key        | Variable Description                         |
-| ------------------- | -------------------------------------------- |
-| `DATABASE_URL`      | The URL to an available PostgreSQL database. |
-| `DATABASE_PASSWORD` | The password to the above database.          |
-| `JWT_SECRET`        | The secret Tyche will use to sign its JWTs.  |
+| Variable Key             | Variable Description                                                           |
+| ------------------------ | ------------------------------------------------------------------------------ |
+| `ENVIRONMENT_TYPE`       | The type of environment you're working in (development, production, etc.)      |
+| `ALLOWED_ORIGIN`         | The allowed origin.                                                            |
+| `DATABASE_USER_FILE`     | An absolute path to a file containing the DB username.                         |
+| `DATABASE_PASSWORD_FILE` | An absolute path to a file containing the DB password.                         |
+| `DATABASE_URL_FILE`      | An absolute path to a file containing the DB URL.                              |
+| `JWT_SECRET_FILE`        | An absolute path to a file containing a secret that will be used to sign JWTs. |
+
+## Running
+
+Use `cargo run` to run the development build of the application.
