@@ -1,5 +1,8 @@
 # Sensitive Information
 secrets
 
+# Environment Specific Information
+.env
+
 # Generated Files
 /target
