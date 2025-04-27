@@ -12,7 +12,11 @@ running:
 5. [sqlx-cli](https://github.com/launchbadge/sqlx/blob/main/sqlx-cli/README.md#install)
 6. [GNU Make](https://www.gnu.org/software/make/)
 
-When prompted, run `direnv allow` from the root of Tyche's repository.
+When prompted, run the following from the root of the repository:
+
+```sh
+direnv allow
+```
 
 ## Environment Variables
 
@@ -33,11 +37,8 @@ files some variables point to may contain sensitive information.
 
 ## Running
 
-First, run `make db-create` to start a docker container running the development
-PostgreSQL database.
-
-First, run the following to start a development PostgreSQL server in a docker
-container:
+First, run the following from the root of the repository to start a development
+PostgreSQL server in a docker container:
 
 ```sh
 make db-create
