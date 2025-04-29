@@ -17,7 +17,7 @@ use crate::{
 pub async fn create_one(
     db: rocket_db_pools::Connection<UserRepository>,
     json_input: Json<UserInput>,
-) -> Result<status::Created<Json<UserOutput>>, RepositoryError> {
+) -> Result<status::Created<Json<LoginOutput>>, ErrorResponse> {
     let input = json_input.into_inner();
     let user_password_hash = SecretBox::new(Box::new(
         sha3::Sha3_256::digest(input.password.expose_secret()).to_vec(),
@@ -26,19 +26,28 @@ pub async fn create_one(
     let username = input.name;
     let username_regex = Regex::new(r"^[a-zA-Z0-9_]+$").unwrap();
     if !username_regex.is_match(&username) {
-        return Err(RepositoryError::Unspecified("Invalid username".to_string()));
+        return Err(RepositoryError::Unspecified("Invalid username".to_string()).into());
     }
 
-    match repositories::user::create_one(db, username, user_password_hash).await {
-        Ok(user) => {
-            let location = format!("/users/{}", user.id);
-            let output = UserOutput::from(user);
-            let response = status::Created::new(location).body(Json(output));
+    let user = match repositories::user::create_one(db, username, user_password_hash).await {
+        Ok(user) => user,
+        Err(err) => return Err(err.into()),
+    };
 
-            Ok(response)
-        }
-        Err(err) => Err(err),
-    }
+    let token = match encode_claims(user.id) {
+        Ok(token) => token,
+        Err(err) => return Err(err.into()),
+    };
+
+    let login_output = LoginOutput {
+        user: UserOutput::from(user),
+        token,
+    };
+
+    let location = format!("/users/{}", login_output.user.id);
+    let response = status::Created::new(location).body(Json(login_output));
+
+    Ok(response)
 }
 
 #[rocket::get("/<user_id>", rank = 1)]
