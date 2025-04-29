@@ -30,7 +30,7 @@ pub struct Claims {
 pub fn encode_claims(user_id: Uuid) -> Result<String, AuthError> {
     let issued_at = Utc::now();
     let not_before = issued_at;
-    let expiration = match issued_at.checked_add_signed(Duration::seconds(180)) {
+    let expiration = match issued_at.checked_add_signed(Duration::days(7)) {
         Some(time) => time,
         None => return Err(AuthError::Unspecified("an auth error occurred".to_string())),
     };
