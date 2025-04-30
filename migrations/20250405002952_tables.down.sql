@@ -1,6 +1,7 @@
 DROP TRIGGER IF EXISTS increment_like_count ON LIKES;
 DROP FUNCTION IF EXISTS increment_like_count;
 
+DROP TABLE IF EXISTS sessions;
 DROP TABLE IF EXISTS likes;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS users;

@@ -1,7 +1,9 @@
 use std::{env, fs};
 
 use middleware::cors::CorsMiddleware;
-use repositories::{like::LikeRepository, post::PostRepository, user::UserRepository};
+use repositories::{
+    like::LikeRepository, post::PostRepository, session::SessionRepository, user::UserRepository,
+};
 use rocket::routes;
 use rocket_db_pools::Database;
 
@@ -9,6 +11,7 @@ pub mod handlers;
 pub mod middleware;
 pub mod models;
 pub mod repositories;
+pub mod services;
 
 #[rocket::options("/<_path..>")]
 pub async fn option(_path: std::path::PathBuf) -> rocket::http::Status {
@@ -32,18 +35,21 @@ fn rocket() -> _ {
         .merge(("address", host_address))
         .merge(("databases.user_repository.url", database_url.clone()))
         .merge(("databases.post_repository.url", database_url.clone()))
-        .merge(("databases.like_repository.url", database_url.clone()));
+        .merge(("databases.like_repository.url", database_url.clone()))
+        .merge(("databases.session_repository.url", database_url.clone()));
 
     rocket::custom(figment)
         .attach(CorsMiddleware)
         .attach(UserRepository::init())
         .attach(PostRepository::init())
         .attach(LikeRepository::init())
-        .mount("/api/health", routes![handlers::health::check])
+        .attach(SessionRepository::init())
         .mount(
-            "/api/user",
-            routes![handlers::user::create_one, handlers::user::login, option],
+            "/api",
+            routes![handlers::login::login, handlers::login::logout],
         )
+        .mount("/api/health", routes![handlers::health::check])
+        .mount("/api/user", routes![handlers::user::create_one, option])
         .mount(
             "/api/users",
             routes![

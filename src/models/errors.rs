@@ -2,6 +2,7 @@
 pub enum ErrorResponse {
     Repository(RepositoryError),
     Auth(AuthError),
+    Service(ServiceError),
 }
 
 impl From<RepositoryError> for ErrorResponse {
@@ -13,6 +14,12 @@ impl From<RepositoryError> for ErrorResponse {
 impl From<AuthError> for ErrorResponse {
     fn from(err: AuthError) -> Self {
         ErrorResponse::Auth(err)
+    }
+}
+
+impl From<ServiceError> for ErrorResponse {
+    fn from(err: ServiceError) -> Self {
+        ErrorResponse::Service(err)
     }
 }
 
@@ -57,8 +64,18 @@ pub enum AuthError {
     InvalidToken(String),
     #[response(status = 400)]
     InvalidLogin(String),
+    #[response(status = 400)]
+    InvalidSession(String),
     #[response(status = 401)]
     Unauthenticated(String),
+    #[response(status = 500)]
+    Unspecified(String),
+}
+
+#[derive(rocket::Responder, Debug, serde::Serialize)]
+pub enum ServiceError {
+    #[response(status = 500)]
+    ServiceNotFound(String),
     #[response(status = 500)]
     Unspecified(String),
 }

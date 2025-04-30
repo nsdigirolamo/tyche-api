@@ -19,15 +19,15 @@ static JWT_SECRET: Lazy<String> = Lazy::new(|| {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Claims {
     pub iss: String,      // Issuer
-    pub sub: String,      // Subject
+    pub sub: Uuid,        // Subject
     pub aud: Vec<String>, // Audience (Recipients of the JWT)
     pub exp: i64,         // Expiration Time (JWT must not be accepted after this time)
     pub nbf: i64,         // Not Before (JWT must not be accepted before this time)
     pub iat: i64,         // Issued At
-    pub jti: String,      // JWT ID (Unique identifier for the JWT)
+    pub jti: Uuid,        // JWT ID (Unique identifier for the JWT)
 }
 
-pub fn encode_claims(user_id: Uuid) -> Result<String, AuthError> {
+pub fn create_claims(user_id: Uuid) -> Result<Claims, AuthError> {
     let issued_at = Utc::now();
     let not_before = issued_at;
     let expiration = match issued_at.checked_add_signed(Duration::days(7)) {
@@ -35,16 +35,18 @@ pub fn encode_claims(user_id: Uuid) -> Result<String, AuthError> {
         None => return Err(AuthError::Unspecified("an auth error occurred".to_string())),
     };
 
-    let claims = Claims {
+    Ok(Claims {
         iss: ISSUER.to_string(),
-        sub: user_id.to_string(),
+        sub: user_id,
         aud: vec![ISSUER.to_string()],
         exp: expiration.timestamp(),
         nbf: not_before.timestamp(),
         iat: issued_at.timestamp(),
-        jti: Uuid::new_v4().to_string(),
-    };
+        jti: Uuid::new_v4(),
+    })
+}
 
+pub fn encode_claims(claims: Claims) -> Result<String, AuthError> {
     let header = jsonwebtoken::Header::new(JWT_ALGORITHM);
     let key = EncodingKey::from_secret(JWT_SECRET.as_bytes());
 

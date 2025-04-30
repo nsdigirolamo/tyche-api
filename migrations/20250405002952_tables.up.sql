@@ -32,6 +32,14 @@ CREATE TABLE IF NOT EXISTS likes (
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
+CREATE TABLE IF NOT EXISTS sessions (
+    user_id UUID NOT NULL,
+    token_id UUID NOT NULL,
+
+    PRIMARY KEY (user_id, token_id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 CREATE OR REPLACE FUNCTION increment_like_count()
 RETURNS trigger AS $$
     BEGIN
