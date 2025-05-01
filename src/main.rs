@@ -46,35 +46,29 @@ fn rocket() -> _ {
         .attach(SessionRepository::init())
         .mount(
             "/api",
-            routes![handlers::login::login, handlers::login::logout],
+            routes![handlers::login::login, handlers::login::logout, option],
         )
         .mount("/api/health", routes![handlers::health::check])
-        .mount("/api/user", routes![handlers::user::create_one, option])
+        .mount("/api/user", routes![handlers::user::create_one])
         .mount(
             "/api/users",
             routes![
                 handlers::user::find_one_by_id,
-                handlers::user::find_one_by_name,
-                option
+                handlers::user::find_one_by_name
             ],
         )
-        .mount("/api/post", routes![handlers::post::create_one, option])
+        .mount("/api/post", routes![handlers::post::create_one])
         .mount(
             "/api/posts",
             routes![
                 handlers::post::find_many_without_parents,
                 handlers::post::find_one_by_id,
-                handlers::post::find_many_by_parent_id,
-                option
+                handlers::post::find_many_by_parent_id
             ],
         )
         .mount(
             "/api/like",
-            routes![
-                handlers::like::create_one,
-                handlers::like::delete_one,
-                option
-            ],
+            routes![handlers::like::create_one, handlers::like::delete_one],
         )
-        .mount("/api/likes", routes![handlers::like::find_one, option])
+        .mount("/api/likes", routes![handlers::like::find_one])
 }
