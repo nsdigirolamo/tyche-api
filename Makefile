@@ -30,6 +30,7 @@ db-enter:
 	sudo docker exec -it tyche-postgres psql -U postgres
 
 docker-build:
+	cargo sqlx prepare && \
 	sudo docker build -t nsdigirolamo/tyche:api . && \
 	cd migrations && sudo docker build -t nsdigirolamo/tyche:db .
 
